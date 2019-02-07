@@ -14,8 +14,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/ssm"
 	"github.com/bsphere/le_go"
 	"io"
+	"io/ioutil"
 	"log"
-	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -95,9 +95,6 @@ type CloudfrontLog struct {
 }
 
 var (
-	REGION             string         = os.Getenv("REGION")
-	ENDPOINT           string         = fmt.Sprintf("%s.data.logs.insight.rapid7.com", REGION)
-	PORT               int            = 20000
 	validELBLog        *regexp.Regexp = regexp.MustCompile("\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log$")
 	validALBLog        *regexp.Regexp = regexp.MustCompile("\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._\\d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log.gz$")
 	validCloudfrontLog *regexp.Regexp = regexp.MustCompile("\\w+\\.\\d{4}-\\d{2}-\\d{2}-\\d{2}\\.\\w+\\.gz$")
@@ -132,7 +129,7 @@ func handler(ctx context.Context, s3Event events.S3Event) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if filepath.Ext(entity.Object.Key) == "gz" {
+		if filepath.Ext(entity.Object.Key) == ".gz" {
 			ioReader, err = gzip.NewReader(object.Body)
 			if err != nil {
 				log.Fatal(err)
@@ -142,7 +139,7 @@ func handler(ctx context.Context, s3Event events.S3Event) {
 		}
 
 		resp, err := ssmService.GetParameter(&ssm.GetParameterInput{
-			Name:           aws.String(fmt.Sprintf("%s/error_logs_token", filepath.Dir(entity.Object.Key))),
+			Name:           aws.String(fmt.Sprintf("/%s/error_logs_token", filepath.Dir(entity.Object.Key))),
 			WithDecryption: aws.Bool(true),
 		})
 		if err != nil {
@@ -159,6 +156,9 @@ func handler(ctx context.Context, s3Event events.S3Event) {
 
 		if ValidateELBLog(entity.Object.Key) {
 			csvReader := csv.NewReader(ioReader)
+			csvReader.Comma = '\t'
+			csvReader.Comment = '#'
+			csvReader.LazyQuotes = true
 			for {
 				line, err = csvReader.Read()
 				if err == io.EOF {
@@ -205,10 +205,14 @@ func handler(ctx context.Context, s3Event events.S3Event) {
 				if err != nil {
 					fmt.Println(err)
 				}
+				le.Println(string(msg))
 			}
 
 		} else if ValidateALBLog(entity.Object.Key) {
 			csvReader := csv.NewReader(ioReader)
+			csvReader.Comma = '\t'
+			csvReader.Comment = '#'
+			csvReader.LazyQuotes = true
 			for {
 				line, err := csvReader.Read()
 				if err == io.EOF {
@@ -259,10 +263,14 @@ func handler(ctx context.Context, s3Event events.S3Event) {
 				if err != nil {
 					fmt.Println(err)
 				}
+				le.Println(string(msg))
 			}
 
 		} else if ValidateCloudfrontLog(entity.Object.Key) {
 			csvReader := csv.NewReader(ioReader)
+			csvReader.Comma = '\t'
+			csvReader.Comment = '#'
+			csvReader.LazyQuotes = true
 			for {
 				line, err := csvReader.Read()
 				if err == io.EOF {
@@ -303,14 +311,28 @@ func handler(ctx context.Context, s3Event events.S3Event) {
 				if err != nil {
 					fmt.Println(err)
 				}
+				le.Println(string(msg))
 			}
 		} else {
 
 		}
-		le.Println(string(msg))
 	}
 }
 
+func readJsonFromFile(inputFile string) []byte {
+	inputJson, err := ioutil.ReadFile(inputFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return inputJson
+}
+
 func main() {
+	//inputJson := readJsonFromFile("./s3-event.json")
+	//var inputEvent events.S3Event
+	//if err := json.Unmarshal(inputJson, &inputEvent); err != nil {
+	//	fmt.Println(err)
+	//}
+	//handler(nil, inputEvent)
 	lambda.Start(handler)
 }
