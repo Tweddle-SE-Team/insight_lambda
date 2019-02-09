@@ -1,0 +1,25 @@
+dist: trusty
+language: go
+
+jdk:
+- 1.11.x
+
+env:
+  global:
+    # GITHUB Token
+    - secure: bX1ceD0uVfteTIOT8Tl11ViFluMIYaaDwKCo4/KBacdYE7NawInCQ4xBOcK1j+NqYq1Il2mfDNelPdtUvYf9HoW73ZfM7tbrVrs7PyfYc8HSt5+dQ3GsGNDQrv9JQxXk/YwhpfZFd+Z//hGicUG5vdVRZ79/TAMs8ZTnxWBG6iMrKplbm12jXxGKHllBmjiPteRZygun2gM9NHVg3Hs2Cqiv9YLWNBDbNgdurPJzIu449Rbwe/wQbPkvqH9BQ4pKBV3JpM9p4X18i+sqneaFzYpJQNP8c8350schvlZ/xZt8i6tAZRDY9f1LfGNrZS8v6HL4uEnBuKiLwlEON13Aw0EPdKQnyXCF8t9mhnNqXmMrYLtrt/j1GF4Vp3DPOoA3hxu6Auc7WA5vrHdMDiiWaYqkCyUIZPenjMR3uudTRB3aEAZPd2Gl6uCdgwrKnbNeS6PhxGlWN5hDiSQrfkoaLNwAIgWsMD2HMfoKdASJX9vocYEQwkGaPBFrHpc0TNTf1SmzxsmZk3WOPkl7vVjNPWCpyZB3DRyyAGCbwfOxXqZXuXHQr3QNHDVT9KtkPxnF/Li7MnFPvMDjKGVhWzFaxCe9WOwAl7KAPWyr3cbrygBPOlKsF2uyYmaweQp0QOxj3Gqgp04C6VIORFtIu+ha+bP8vxuY/o4nUVL7Y4chHrw=
+
+script:
+ - go get ./...
+ - go build
+ - zip -r build-${TRAVIS_TAG}.zip le_lambda
+
+deploy:
+  provider: releases
+  api_key: ${GITHUB_ACCESS_TOKEN}
+  file:
+    - build-${TRAVIS_TAG}.zip
+  skip_cleanup: true
+  on:
+    repo: ${TRAVIS_REPO_SLUG}
+    tags: true
