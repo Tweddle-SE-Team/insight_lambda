@@ -4,11 +4,6 @@ language: go
 jdk:
 - 1.11.x
 
-env:
-  global:
-    # GITHUB Token
-    - secure: kvmwo/c82SUB18qrjQ2WzVri574PfmujoM5tdMrzCj6aj09hVPAgqrl5m2yqKpjZ5X8GRN5J6DFhr07u3uPFB0Cojo41mC0CrM65KChDnwHMkSC8icAs4MWhuqW0Jj33Wi6cfLqW9scWw5ZNrnCTIZ1zQNOeaY8nPXsEClQBNoy/uqWQ7lWfG886humTWj7QRfKqsOjopwp7/zuAF7yJkfvgwl+cdje2bsR46pNR0GxTfCv8x1O7vYrhGE76+UgkboUXnh17I29Rnw09NN5Riiba/vXXEx9atuazokbEwzt4A3ImtkoSuhAM1d+GBFrYcwcWWDQh+nkxLLHlemiUNE3ER4vZgoSbT85pYLnSfaMml/+XCeQNYtAAWRl4vgys9S6xHCqHPpch3VNMtxYWutKE8D1BLvp/YV/CSigTyc9TSXeR8WM/dq9+1gsacT+dLPPSSqkd+iVwLigCMa5BmgH+lgib3Fs4F5BuvTyl005G9fVQvk5cyyp94i3bp7wN8N6Pz7d/gbhdoutSFDB3jSY981VLSIeeRBHyfcvlQ7fXg35ZmbHtmw857PnCOqZnIyZS+BmNv/pt/t3/xZKP4FfjMf3Fl3uvbbkHF6qRaP96NRPwDNz0c8xd8x54GCeTXDD3JHPIgRkr7g7RNJKMtgXqCLhvRSoeqZ7idRA1l+I=
-
 script:
  - go get ./...
  - go build
@@ -16,7 +11,8 @@ script:
 
 deploy:
   provider: releases
-  api_key: ${GITHUB_ACCESS_TOKEN}
+  api_key:
+    secure: GnhChc/fB0pK7bARdbQ/Z/cULFxGmLvGHb+dtTrq31/2ggwAfTcjNkLdGrIKOKftYRLNvrzRN0B7qinsnTD1LRssn9OdDIAo+nlfBj3ZKU/gorKqJNF1RT8hYA9N4TMqM58AAqPa/AXdKg/Y43D9/2KTS03lrkEM2dCtSUYtoRew/SCmER1KAuH0qO3liOmHGBpSRpCRjkNoTCS7RnPIPltwGQh4pc23KwXZ+GYj5ng8nHTUIHMDiXUUWTnkXxb1E6UWI/dCbSHrP40PF6cxSLO+6H5KC9HXYEnyAk69MLAyGlGWfTSsX+QqJt1zVIgiFGWj+nDnipTo3dhCfXrlPJfwEHMfdlT/hKxDKqg8I7snOheDIh/Q+rQ0tevv2nBJn3byI9rAj3qPtdwyYOuIWRfFkMM7Qs6FUJEk4oyCRCKFCawmr26s1EcGnsnxtW2K9UZMJ8WWnc4uSFPhZvmx4oIxhGRPQkMCKFaYYjRjV51NRJ3iMhkontCSYh/9oni0qFKUWmyTL7peUC+rfvkY+hiA9/vHAhPNizPrbzrugt3OHaynVoEnqXIyNTEZs/S1voOQCKb6dOUPjXY02jRzDhkHQwy5tapfJP+KqPYrmNvJZKUv7a31QtcVgIoCDwK9jlGuqeRChUvPCrTJIh7h/Bline0Iwkpc1laggvjoC64=
   file:
     - build-${TRAVIS_TAG}.zip
   skip_cleanup: true
