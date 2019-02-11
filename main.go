@@ -112,7 +112,7 @@ func ValidateCloudfrontLog(key string) bool {
 	return validCloudfrontLog.MatchString(key)
 }
 
-func handler(ctx context.Context, s3Event events.S3Event) {
+func Handler(ctx context.Context, s3Event events.S3Event) {
 	session := session.New()
 	s3Service := s3.New(session)
 	ssmService := ssm.New(session)
@@ -340,5 +340,5 @@ func main() {
 	//	fmt.Println(err)
 	//}
 	//handler(nil, inputEvent)
-	lambda.Start(handler)
+	lambda.Start(Handler)
 }
