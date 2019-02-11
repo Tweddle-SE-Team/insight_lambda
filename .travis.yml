@@ -1,5 +1,6 @@
 dist: trusty
 language: go
+
 go:
  - 1.11.x
 
@@ -10,9 +11,9 @@ script:
 
 deploy:
   provider: releases
-  api_key:
-    secure: UXytg8xEjIatwOGbXCXS7zxHj+3yEubrggPw507neCx1tZXn1zm83zXCamxsG6IsubDQ8rVtqr7LWs5JL70P5TXLPcWurVrAc+Mefv/q8w8FbKf3VhwHqn0JseMHgz1wg/Uf2jmkkfs8Zx2Fb1RhyzO0vJNGaeIwzS1OPNV4LykJeHodmT3F8sPdwXbZzXHabMzfUb2yeGkSZFQoer7np2AePsIv7ncOo8+CfK0nKQlCqTd/3ibYZjXGV0Y571gGZDQnn/508h/1i/H+RRZ2LgT+0q4AIQiHcqcGVHfwTscOffKM6NNMqtWuBoxsVxRABIz+HCvL59nGlwr2+eomw+1j2dOmcqMb0xOb4bDoO6V017Ku5b6bhwJp8XTTE711RgQDqlZqu2b+oCgUbUz0zz2JjF8/iwEgdVQIh7rqw4o9imWDsCWBKhBoluGyRl/NlZ6WQarjJJ7lLnDhqrkB54eK5OXi7CruJ9ZkbZDrjYBdWzhC6AaIp+ZBXkXn0smgUXO7q15s8twKVCkkPt73VKCSmldVlq1oLuAfk1Dy/TUpIRCiyufzFjba9TWDhsui+U20nxWXOFt7Ps+9Jq8PdL7WCLvnwSFFNV5kv7M0vfQLN3/h8B5LarnOFIxzzfxoouTdnoZ/ZS7GkNSsPl/GNTDqeaVYefVMCys9nOL1mxA=
   file: build-${TRAVIS_TAG}.zip
+  api_key:
+    secure: HA2xWsZIQMwOoZt/6FgLuxLDpdtFQVPk0dyMHBo8r1syV8BwLqm5JgkxCGB6ncRPLM4k4zhKc4h+bXTZUBQl0JphsOe8m/DtZQlq13Jl4BpQoMiXG7GPnVPC6SZOZ1UNe51wjb9AgeUZb4qa8Ba01OIQha334lr2iXOP2dXZWKG/UQCbNWOY3kQMi6ZT7fNl5H7SIFL2NeJFVuN1viv4Wj7K1kNW29I+Hu1P8dr/bQqEvjN08amDcVHFbJMLPPCJkgI9L7/1mcnrLTnmiIzbAp7BgJQNtsMUvsSJXen/t3oR/HR7Px2HqG/BGDMI7DchMwfNHNCXj28uCD2FwRCueA3ma1iCy3Wd/u105BBl+8CsmWi9HMKSZ9otgDYT5Se0znchwfcQTe5gq4MBgy/FA/M0G7iNTByne8fOagxialseR0LD8U2AIEDgO1EMPyWxnVJf963blk6ESeLHBKGr1Wm50M9nfetb4hBKA+ANcW8nqzh3OYbjtIPEdSRzPT1pK1DspHxAWoinyjJ0BjRx7E+vr0z6kgIgoTedRGSaCciHFFkeB5gMbiQetlJpsg6p0Lwr7OwivZ9f7a2NQXIhmhU79XVPPlAaxLfmlzn1wHqYb3OhJy6dCBu+iTfghx+SF0QRBlefmDMrsVMOTBqpm+NsYnJjKt7LfzKDfmeFNYU=
   on:
     repo: Tweddle-SE-Team/le_lambda
     tags: true
