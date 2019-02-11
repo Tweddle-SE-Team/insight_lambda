@@ -138,14 +138,14 @@ func handler(ctx context.Context, s3Event events.S3Event) {
 			ioReader = object.Body
 		}
 
-		ssmPrefix := filepath.Dir(entity.Object.Key))
+		ssmPrefix := filepath.Dir(entity.Object.Key)
 
 		if index := strings.Index(ssmPrefix, "/AWSLogs/"); index != -1 {
 			ssmPrefix = ssmPrefix[:index]
 		}
 
 		resp, err := ssmService.GetParameter(&ssm.GetParameterInput{
-			Name:           aws.String(fmt.Sprintf("/%s/error_logs_token", filepath.Dir(entity.Object.Key))),
+			Name:           aws.String(fmt.Sprintf("/%s/error_logs_token", ssmPrefix)),
 			WithDecryption: aws.Bool(true),
 		})
 		if err != nil {
