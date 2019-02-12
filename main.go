@@ -5,17 +5,19 @@ import (
 	"context"
 	"encoding/csv"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/ssm"
 	"github.com/bsphere/le_go"
+	"github.com/dikhan/logentries_goclient"
 	"io"
 	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -98,6 +100,8 @@ var (
 	validELBLog        *regexp.Regexp = regexp.MustCompile("\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log$")
 	validALBLog        *regexp.Regexp = regexp.MustCompile("\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._\\d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log.gz$")
 	validCloudfrontLog *regexp.Regexp = regexp.MustCompile("\\w+\\.\\d{4}-\\d{2}-\\d{2}-\\d{2}\\.\\w+\\.gz$")
+	logName            string         = "access-logs"
+	logentriesAPIKey   string         = os.Getenv("LOGENTRIES_API_KEY")
 )
 
 func ValidateELBLog(key string) bool {
@@ -115,7 +119,6 @@ func ValidateCloudfrontLog(key string) bool {
 func Handler(ctx context.Context, s3Event events.S3Event) {
 	session := session.New()
 	s3Service := s3.New(session)
-	ssmService := ssm.New(session)
 	var logentriesToken string
 	var line []string
 	var msg []byte
@@ -138,20 +141,31 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 			ioReader = object.Body
 		}
 
-		ssmPrefix := filepath.Dir(entity.Object.Key)
+		logSetName := strings.Replace(filepath.Dir(entity.Object.Key), "/", "-", -1)
 
-		if index := strings.Index(ssmPrefix, "/AWSLogs/"); index != -1 {
-			ssmPrefix = ssmPrefix[:index]
+		if index := strings.Index(logSetName, "-AWSLogs-"); index != -1 {
+			logSetName = logSetName[:index]
 		}
 
-		resp, err := ssmService.GetParameter(&ssm.GetParameterInput{
-			Name:           aws.String(fmt.Sprintf("/%s/error_logs_token", ssmPrefix)),
-			WithDecryption: aws.Bool(true),
-		})
+		leAdmin, err := logentries_goclient.NewLogEntriesClient(logentriesAPIKey)
 		if err != nil {
 			log.Fatal(err)
 		}
-		logentriesToken = *resp.Parameter.Value
+		logs, err := leAdmin.Logs.GetLogs()
+		if err != nil {
+			log.Fatal(err)
+		}
+		for _, logEntry := range logs {
+			for _, logSetInfo := range logEntry.LogsetsInfo {
+				if logSetInfo.Name == logSetName && logEntry.Name == logName {
+					if len(logEntry.Tokens) > 0 {
+						logentriesToken = logEntry.Tokens[0]
+					} else {
+						log.Fatal(errors.New("No tokens found"))
+					}
+				}
+			}
+		}
 
 		le, err := le_go.Connect(logentriesToken)
 		if err != nil {
