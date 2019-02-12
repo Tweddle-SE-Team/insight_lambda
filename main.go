@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/csv"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -119,6 +118,10 @@ func ValidateCloudfrontLog(key string) bool {
 func Handler(ctx context.Context, s3Event events.S3Event) {
 	session := session.New()
 	s3Service := s3.New(session)
+	leAdmin, err := logentries_goclient.NewLogEntriesClient(logentriesAPIKey)
+	if err != nil {
+		log.Fatal(err)
+	}
 	var logentriesToken string
 	var line []string
 	var msg []byte
@@ -130,12 +133,14 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 			Key:    aws.String(entity.Object.Key),
 		})
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			continue
 		}
 		if filepath.Ext(entity.Object.Key) == ".gz" {
 			ioReader, err = gzip.NewReader(object.Body)
 			if err != nil {
-				log.Fatal(err)
+				log.Println(err)
+				continue
 			}
 		} else {
 			ioReader = object.Body
@@ -147,29 +152,34 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 			logSetName = logSetName[:index]
 		}
 
-		leAdmin, err := logentries_goclient.NewLogEntriesClient(logentriesAPIKey)
-		if err != nil {
-			log.Fatal(err)
-		}
 		logs, err := leAdmin.Logs.GetLogs()
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
+
 		for _, logEntry := range logs {
 			for _, logSetInfo := range logEntry.LogsetsInfo {
 				if logSetInfo.Name == logSetName && logEntry.Name == logName {
 					if len(logEntry.Tokens) > 0 {
+						log.Printf("Found token for logset %s", logSetName)
 						logentriesToken = logEntry.Tokens[0]
+						break
 					} else {
-						log.Fatal(errors.New("No tokens found"))
+						log.Printf("No tokens found for logset %s", logSetName)
 					}
 				}
 			}
 		}
 
+		if logentriesToken == "" {
+			log.Printf("Log entry for access logs of %s logset doesn't exist, skipping", logSetName)
+			continue
+		}
+
 		le, err := le_go.Connect(logentriesToken)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			continue
 		}
 
 		defer le.Close()
@@ -195,7 +205,7 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 
 				lbRequest, err := strconv.Unquote(line[12])
 				if err != nil {
-					log.Fatal(err)
+					log.Println(err)
 				}
 				lbRequestParts := strings.Split(lbRequest, " ")
 				method, url, http_version := lbRequestParts[0], lbRequestParts[1], lbRequestParts[2]
@@ -223,7 +233,7 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 				}
 				msg, err = json.Marshal(message)
 				if err != nil {
-					fmt.Println(err)
+					log.Println(err)
 				}
 				le.Println(string(msg))
 			}
@@ -249,7 +259,7 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 
 				lbRequest, err := strconv.Unquote(line[12])
 				if err != nil {
-					log.Fatal(err)
+					log.Println(err)
 				}
 				lbRequestParts := strings.Split(lbRequest, " ")
 				method, url, http_version := lbRequestParts[0], lbRequestParts[1], lbRequestParts[2]
@@ -281,7 +291,7 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 
 				msg, err = json.Marshal(message)
 				if err != nil {
-					fmt.Println(err)
+					log.Println(err)
 				}
 				le.Println(string(msg))
 			}
@@ -329,7 +339,7 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 				}
 				msg, err = json.Marshal(message)
 				if err != nil {
-					fmt.Println(err)
+					log.Println(err)
 				}
 				le.Println(string(msg))
 			}
@@ -342,7 +352,7 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 func readJsonFromFile(inputFile string) []byte {
 	inputJson, err := ioutil.ReadFile(inputFile)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 	return inputJson
 }
@@ -351,8 +361,8 @@ func main() {
 	//inputJson := readJsonFromFile("./s3-event.json")
 	//var inputEvent events.S3Event
 	//if err := json.Unmarshal(inputJson, &inputEvent); err != nil {
-	//	fmt.Println(err)
+	//	log.Println(err)
 	//}
-	//handler(nil, inputEvent)
+	//Handler(nil, inputEvent)
 	lambda.Start(Handler)
 }
