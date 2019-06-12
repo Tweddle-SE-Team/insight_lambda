@@ -27,7 +27,77 @@
           "arn": "arn:aws:s3:::mybucket"
         },
         "object": {
-          "key": "quickguide/qa/test-1/E7FF1MGV3IDT6.2019-02-01-23.5b66e446.gz",
+          "key": "quickguide/prod/infiniti-1/E332KGWWUFVGLZ.2019-06-10-23.7b32f2b1.gz",
+          "size": 1024,
+          "urlDecodedKey": "HappyFace.jpg",
+          "versionId": "version",
+          "eTag": "d41d8cd98f00b204e9800998ecf8427e",
+          "sequencer": "Happy Sequencer"
+        }
+      }
+    },{
+      "eventVersion": "2.0",
+      "eventSource": "aws:s3",
+      "awsRegion": "us-east-1",
+      "eventTime": "1970-01-01T00:00:00.123Z",
+      "eventName": "ObjectCreated:Put",
+      "userIdentity": {
+        "principalId": "EXAMPLE"
+      },
+      "requestParameters": {
+        "sourceIPAddress": "127.0.0.1"
+      },
+      "responseElements": {
+        "x-amz-request-id": "C3D13FE58DE4C810",
+        "x-amz-id-2": "FMyUVURIY8/IgAtTv8xRjskZQpcIZ9KG4V5Wp6S7S/JRWeUWerMUE5JgHvANOjpD"
+      },
+      "s3": {
+        "s3SchemaVersion": "1.0",
+        "configurationId": "testConfigRule",
+        "bucket": {
+          "name": "logentries.source.tweddle.com",
+          "ownerIdentity": {
+            "principalId": "EXAMPLE"
+          },
+          "arn": "arn:aws:s3:::mybucket"
+        },
+        "object": {
+          "key": "techdoc/prod/tme-1/AWSLogs/644721669605/elasticloadbalancing/eu-west-1/2019/06/12/644721669605_elasticloadbalancing_eu-west-1_app.techdoc-prod-tme-1.a10d49c971a1871d_20190612T0000Z_52.211.37.133_4fpz3lp2.log.gz",
+          "size": 1024,
+          "urlDecodedKey": "HappyFace.jpg",
+          "versionId": "version",
+          "eTag": "d41d8cd98f00b204e9800998ecf8427e",
+          "sequencer": "Happy Sequencer"
+        }
+      }
+    },{
+      "eventVersion": "2.0",
+      "eventSource": "aws:s3",
+      "awsRegion": "us-east-1",
+      "eventTime": "1970-01-01T00:00:00.123Z",
+      "eventName": "ObjectCreated:Put",
+      "userIdentity": {
+        "principalId": "EXAMPLE"
+      },
+      "requestParameters": {
+        "sourceIPAddress": "127.0.0.1"
+      },
+      "responseElements": {
+        "x-amz-request-id": "C3D13FE58DE4C810",
+        "x-amz-id-2": "FMyUVURIY8/IgAtTv8xRjskZQpcIZ9KG4V5Wp6S7S/JRWeUWerMUE5JgHvANOjpD"
+      },
+      "s3": {
+        "s3SchemaVersion": "1.0",
+        "configurationId": "testConfigRule",
+        "bucket": {
+          "name": "logentries.source.tweddle.com",
+          "ownerIdentity": {
+            "principalId": "EXAMPLE"
+          },
+          "arn": "arn:aws:s3:::mybucket"
+        },
+        "object": {
+          "key": "cd/prod/fca-ivh-1/AWSLogs/644721669605/elasticloadbalancing/us-east-1/2019/06/12/644721669605_elasticloadbalancing_us-east-1_cd-prod-fca-ivh-1_20190612T0000Z_100.26.124.38_22jxr7y6.log",
           "size": 1024,
           "urlDecodedKey": "HappyFace.jpg",
           "versionId": "version",
