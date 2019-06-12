@@ -153,11 +153,11 @@ func readJsonFromFile(inputFile string) []byte {
 }
 
 func main() {
-	inputJson := readJsonFromFile("./s3-event.json")
-	var inputEvent events.S3Event
-	if err := json.Unmarshal(inputJson, &inputEvent); err != nil {
-		log.Println(err)
-	}
-	Handler(context.TODO(), inputEvent)
+	//inputJson := readJsonFromFile("./s3-event.json")
+	//var inputEvent events.S3Event
+	//if err := json.Unmarshal(inputJson, &inputEvent); err != nil {
+	//	log.Println(err)
+	//}
+	//Handler(context.TODO(), inputEvent)
 	lambda.Start(Handler)
 }
