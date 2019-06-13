@@ -1,35 +1,35 @@
 package main
 
 import (
+	"bufio"
 	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/Tweddle-SE-Team/insight_go"
+	"github.com/Tweddle-SE-Team/insight_goclient"
+	"github.com/Tweddle-SE-Team/insight_lambda/logs"
+	"github.com/alexflint/go-restructure"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/Tweddle-SE-Team/insight_goclient"
-	"github.com/Tweddle-SE-Team/insight_lambda/logs"
-	"github.com/alexflint/go-restructure"
-	"github.com/Tweddle-SE-Team/insight_go"
 	"io"
 	"io/ioutil"
 	"log"
 	"os"
-	"bufio"
 	"path/filepath"
 	"regexp"
 	"strings"
 )
 
 const (
-	CLOUDFRONT_LOG_REGEXP = "\\w+\\.\\d{4}-\\d{2}-\\d{2}-\\d{2}\\.\\w+\\.gz$"
-	ALB_LOG_REGEXP = "\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._\\d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log.gz$"
-	ELB_LOG_REGEXP = "\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log$"
-	INSIGHT_LOG_NAME_ENV = "INSIGHT_LOG_NAME"
-	INSIGHT_API_KEY_ENV = "INSIGHT_API_KEY"
+	CLOUDFRONT_LOG_REGEXP  = "\\w+\\.\\d{4}-\\d{2}-\\d{2}-\\d{2}\\.\\w+\\.gz$"
+	ALB_LOG_REGEXP         = "\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._\\d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log.gz$"
+	ELB_LOG_REGEXP         = "\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log$"
+	INSIGHT_LOG_NAME_ENV   = "INSIGHT_LOG_NAME"
+	INSIGHT_API_KEY_ENV    = "INSIGHT_API_KEY"
 	INSIGHT_API_REGION_ENV = "INSIGHT_API_REGION"
 )
 
@@ -139,7 +139,7 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 		}
 
 		if err = scanner.Err(); err != nil {
-		   log.Fatal(err)
+			log.Fatal(err)
 		}
 	}
 }

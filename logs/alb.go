@@ -36,7 +36,7 @@ type ALBLog struct {
 	HTTPVersion            string `json:"http_version" regexp:"- |[^ ]*"`
 	_                      string `regexp:"\" \""`
 	UserAgent              string `json:"user_agent" regexp:"[^\"]*"`
-	_ 							  string `regexp:"\" "`
+	_                      string `regexp:"\" "`
 	SSLCipher              string `json:"ssl_cipher" regexp:"[A-Z0-9-]+"`
 	_                      string `regexp:" "`
 	SSLProtocol            string `json:"ssl_protocol" regexp:"[A-Za-z0-9.-]*"`
@@ -45,18 +45,18 @@ type ALBLog struct {
 	_                      string `regexp:" \""`
 	TraceId                string `json:"trace_id" regexp:"[^\"]*"`
 	_                      string `regexp:"\" \""`
-	DomainName 				  string `json:"domain_name" regexp:"[^\"]*"`
+	DomainName             string `json:"domain_name" regexp:"[^\"]*"`
 	_                      string `regexp:"\" \""`
-   ChosenCertArn 			  string `json:"chosen_cert_arn" regexp:"[^\"]*"`
-   _ 							  string `regexp:"\" "`
-   MatchedRulePriority 	  string `json:"matched_rule_priority" regexp:"[-.0-9]*"`
-   _                      string `regexp:" "`
-   RequestCreationTime 	  string `json:"request_creation_time" regexp:"[^ ]*"`
-   _                      string `regexp:" \""`
-   ActionsExecuted 		  string `json:"actions_executed" regexp:"[^\"]*"`
-   _                      string `regexp:"\" \""`
-   RedirectUrl 			  string `json:"redirect_url" regexp:"[^\"]*"`
-   _                      string `regexp:"\""`
-   LambdaErrorReason 	  string `json:"lambda_error_reason" regexp:"$| \"[^ ]*\""`
-   NewField 				  string `json:"new_field" regexp:".*"`
+	ChosenCertArn          string `json:"chosen_cert_arn" regexp:"[^\"]*"`
+	_                      string `regexp:"\" "`
+	MatchedRulePriority    string `json:"matched_rule_priority" regexp:"[-.0-9]*"`
+	_                      string `regexp:" "`
+	RequestCreationTime    string `json:"request_creation_time" regexp:"[^ ]*"`
+	_                      string `regexp:" \""`
+	ActionsExecuted        string `json:"actions_executed" regexp:"[^\"]*"`
+	_                      string `regexp:"\" \""`
+	RedirectUrl            string `json:"redirect_url" regexp:"[^\"]*"`
+	_                      string `regexp:"\""`
+	LambdaErrorReason      string `json:"lambda_error_reason" regexp:"$| \"[^ ]*\""`
+	NewField               string `json:"new_field" regexp:".*"`
 }
