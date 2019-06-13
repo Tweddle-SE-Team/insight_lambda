@@ -27,7 +27,7 @@ import (
 const (
 	CLOUDFRONT_LOG_REGEXP  = "\\w+\\.\\d{4}-\\d{2}-\\d{2}-\\d{2}\\.\\w+\\.gz$"
 	ALB_LOG_REGEXP         = "\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._\\d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log.gz$"
-	ELB_LOG_REGEXP         = "\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log$"
+	ELB_LOG_REGEXP         = "\\d+_\\w+_\\w{2}-\\w{4,9}-[12]_.*._\\d{8}T\\d{4}Z_\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}_.*.log$"
 	INSIGHT_LOG_NAME_ENV   = "INSIGHT_LOG_NAME"
 	INSIGHT_API_KEY_ENV    = "INSIGHT_API_KEY"
 	INSIGHT_API_REGION_ENV = "INSIGHT_API_REGION"
