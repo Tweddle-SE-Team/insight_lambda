@@ -92,6 +92,8 @@ func Handler(ctx context.Context, s3Event events.S3Event) {
 			continue
 		}
 
+		log.Println("Found token for %s logset", logsetName)
+
 		insight, err := insight_go.Connect(insightApiRegion, insightToken)
 		if err != nil {
 			log.Println(err)
