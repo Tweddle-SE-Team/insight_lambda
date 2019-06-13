@@ -12,7 +12,7 @@ type ALBLog struct {
 	ClientPort             string `json:"client_port" regexp:"[0-9]*"`
 	_                      string `regexp:" "`
 	TargetIP               string `json:"target_ip" regexp:"[^ ]*"`
-	_                      string `regexp:":"`
+	_                      string `regexp:"[:-]"`
 	TargetPort             string `json:"target_port" regexp:"[0-9]*"`
 	_                      string `regexp:" "`
 	RequestProcessingTime  string `json:"request_processing_time" regexp:"[-.0-9]*"`
